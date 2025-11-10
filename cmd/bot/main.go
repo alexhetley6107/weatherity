@@ -2,25 +2,23 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"github.com/alexhetley6107/weatherity/internal/weather"
-	"github.com/joho/godotenv"
+	"github.com/alexhetley6107/weatherity/internal/bot"
+	"github.com/alexhetley6107/weatherity/internal/env"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("⚠️  .env file not found, using system environment")
-	}
 
-	weatherToken := os.Getenv("OPENWEATHER_TOKEN")
-
-	res, err := weather.GetWeather("Лондон", weatherToken)
-
+	cfg, err := env.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println(res)
+	bot, err := bot.NewBot(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bot.Start()
 
 }
